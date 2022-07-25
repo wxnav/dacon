@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>RandomForest | dacon</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="RandomForest" />
+<meta name="author" content="최민아" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="작성완료" />
+<meta property="og:description" content="작성완료" />
+<link rel="canonical" href="https://wxnav.github.io/dacon/python/2022/07/25/RandomForest.html" />
+<meta property="og:url" content="https://wxnav.github.io/dacon/python/2022/07/25/RandomForest.html" />
+<meta property="og:site_name" content="dacon" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-07-25T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="RandomForest" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"최민아"},"dateModified":"2022-07-25T00:00:00-05:00","datePublished":"2022-07-25T00:00:00-05:00","description":"작성완료","headline":"RandomForest","mainEntityOfPage":{"@type":"WebPage","@id":"https://wxnav.github.io/dacon/python/2022/07/25/RandomForest.html"},"url":"https://wxnav.github.io/dacon/python/2022/07/25/RandomForest.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/dacon/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://wxnav.github.io/dacon/feed.xml" title="dacon" /><link rel="shortcut icon" type="image/x-icon" href="/dacon/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/dacon/">dacon</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/dacon/about/">About Me</a><a class="page-link" href="/dacon/search/">Search</a><a class="page-link" href="/dacon/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">RandomForest</h1><p class="page-description">작성완료</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-07-25T00:00:00-05:00" itemprop="datePublished">
+        Jul 25, 2022
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">최민아</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      2 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/dacon/categories/#python">python</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-justify-center">
+          <div class="px-2">
+
+    <a href="https://github.com/wxnav/dacon/tree/master/_notebooks/2022-07-25-RandomForest.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/dacon/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/wxnav/dacon/master?filepath=_notebooks%2F2022-07-25-RandomForest.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/dacon/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/wxnav/dacon/blob/master/_notebooks/2022-07-25-RandomForest.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/dacon/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+          <div class="px-2">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2Fwxnav%2Fdacon%2Fblob%2Fmaster%2F_notebooks%2F2022-07-25-RandomForest.ipynb" target="_blank">
+      <img class="notebook-badge-image" src="/dacon/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
+  </a>
+</div>
+
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="toc" class="section-nav">
+<li class="toc-entry toc-h3"><a href="#전처리">전처리 </a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#결측치-평균으로-대체">결측치 평균으로 대체 </a></li>
+<li class="toc-entry toc-h4"><a href="#결측치-보간법으로-대체">결측치 보간법으로 대체 </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h3"><a href="#모델링">모델링 </a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#랜덤포레스트">랜덤포레스트 </a></li>
+<li class="toc-entry toc-h4"><a href="#랜덤포레스트-평가척도-학습">랜덤포레스트 평가척도 학습 </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h3"><a href="#튜닝">튜닝 </a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#변수중요도">변수중요도 </a></li>
+<li class="toc-entry toc-h4"><a href="#변수-제거">변수 제거 </a></li>
+<li class="toc-entry toc-h4"><a href="#하이퍼파라미터">하이퍼파라미터 </a></li>
+<li class="toc-entry toc-h4"><a href="#GridSearch">GridSearch </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2022-07-25-RandomForest.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>-</code> (1/3): 전처리</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>-</code> (2/3): 모델링</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>-</code> (3/3): 튜닝</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="전처리">
+<a class="anchor" href="#%EC%A0%84%EC%B2%98%EB%A6%AC" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>전처리</strong><a class="anchor-link" href="#%EC%A0%84%EC%B2%98%EB%A6%AC"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="결측치-평균으로-대체">
+<a class="anchor" href="#%EA%B2%B0%EC%B8%A1%EC%B9%98-%ED%8F%89%EA%B7%A0%EC%9C%BC%EB%A1%9C-%EB%8C%80%EC%B2%B4" aria-hidden="true"><span class="octicon octicon-link"></span></a>결측치 평균으로 대체<a class="anchor-link" href="#%EA%B2%B0%EC%B8%A1%EC%B9%98-%ED%8F%89%EA%B7%A0%EC%9C%BC%EB%A1%9C-%EB%8C%80%EC%B2%B4"> </a>
+</h4>
+<p>df.fillna({'열 이름':int(df['열 이름'].mean)}, inplace=True)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="결측치-보간법으로-대체">
+<a class="anchor" href="#%EA%B2%B0%EC%B8%A1%EC%B9%98-%EB%B3%B4%EA%B0%84%EB%B2%95%EC%9C%BC%EB%A1%9C-%EB%8C%80%EC%B2%B4" aria-hidden="true"><span class="octicon octicon-link"></span></a>결측치 보간법으로 대체<a class="anchor-link" href="#%EA%B2%B0%EC%B8%A1%EC%B9%98-%EB%B3%B4%EA%B0%84%EB%B2%95%EC%9C%BC%EB%A1%9C-%EB%8C%80%EC%B2%B4"> </a>
+</h4>
+<p>결측치를 이전 행과 다음 행의 평균으로 보간</p>
+<p>df.interpolate(inplace=True)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="모델링">
+<a class="anchor" href="#%EB%AA%A8%EB%8D%B8%EB%A7%81" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>모델링</strong><a class="anchor-link" href="#%EB%AA%A8%EB%8D%B8%EB%A7%81"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="랜덤포레스트">
+<a class="anchor" href="#%EB%9E%9C%EB%8D%A4%ED%8F%AC%EB%A0%88%EC%8A%A4%ED%8A%B8" aria-hidden="true"><span class="octicon octicon-link"></span></a>랜덤포레스트<a class="anchor-link" href="#%EB%9E%9C%EB%8D%A4%ED%8F%AC%EB%A0%88%EC%8A%A4%ED%8A%B8"> </a>
+</h4>
+<p>랜덤포레스트 : 여러 개의 의사결정나무를 만들어 이들의 평균으로 예측 성능을 높이는 방법 (앙상블 기법)</p>
+<p>from sklearn.ensemble import RandomForestRegressor</p>
+<p>model = RandomForestRegressor()</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="랜덤포레스트-평가척도-학습">
+<a class="anchor" href="#%EB%9E%9C%EB%8D%A4%ED%8F%AC%EB%A0%88%EC%8A%A4%ED%8A%B8-%ED%8F%89%EA%B0%80%EC%B2%99%EB%8F%84-%ED%95%99%EC%8A%B5" aria-hidden="true"><span class="octicon octicon-link"></span></a>랜덤포레스트 평가척도 학습<a class="anchor-link" href="#%EB%9E%9C%EB%8D%A4%ED%8F%AC%EB%A0%88%EC%8A%A4%ED%8A%B8-%ED%8F%89%EA%B0%80%EC%B2%99%EB%8F%84-%ED%95%99%EC%8A%B5"> </a>
+</h4>
+<p>criterion 옵션으로 어떤 평가척도를 기준으로 훈련할 것인지 지정</p>
+<p>RMSE : sqrt(MSE 평가지표)</p>
+<p>model = RandomForestRegressor(criterion = 'mse')</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="튜닝">
+<a class="anchor" href="#%ED%8A%9C%EB%8B%9D" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>튜닝</strong><a class="anchor-link" href="#%ED%8A%9C%EB%8B%9D"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="변수중요도">
+<a class="anchor" href="#%EB%B3%80%EC%88%98%EC%A4%91%EC%9A%94%EB%8F%84" aria-hidden="true"><span class="octicon octicon-link"></span></a>변수중요도<a class="anchor-link" href="#%EB%B3%80%EC%88%98%EC%A4%91%EC%9A%94%EB%8F%84"> </a>
+</h4>
+<p>변수의 중요도 : 예측변수를 결정할 때 각 피쳐가 얼마나 중요한 역할을 하는지에 대한 척도</p>
+<p>변수의 중요도가 낮다면 해당 피쳐를 제거하는 것이 모델의 성능을 높일 수 있다.</p>
+<p>model.feature<em>importances</em></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="변수-제거">
+<a class="anchor" href="#%EB%B3%80%EC%88%98-%EC%A0%9C%EA%B1%B0" aria-hidden="true"><span class="octicon octicon-link"></span></a>변수 제거<a class="anchor-link" href="#%EB%B3%80%EC%88%98-%EC%A0%9C%EA%B1%B0"> </a>
+</h4>
+<p><code>-</code> 변수 중요도가 낮은 피쳐를 파악하고 차례대로 하나씩 피쳐를 제거하며 모델을 훈련</p>
+<p><code>-</code> train 세트에서 제거한 피쳐는 test 세트에서 동일하게 drop 후 모델 훈련</p>
+<p><code>-</code> drop
+X_train_1 = train.drop(['drop 할 피쳐'], axis=1)</p>
+<p>test_1 = test.drop(['drop 할 피쳐'], axis = 1)</p>
+<p><code>-</code> 모델 훈련</p>
+<p>model_input_var1 = RandomForestRegressor(criterion = 'mse')</p>
+<p>model_input_var1.fit(X_train_1, Y_train)</p>
+<p><code>-</code> test 세트 예측</p>
+<p>y_pred_1 = model_input_var1.predict(test_1)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="하이퍼파라미터">
+<a class="anchor" href="#%ED%95%98%EC%9D%B4%ED%8D%BC%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0" aria-hidden="true"><span class="octicon octicon-link"></span></a>하이퍼파라미터<a class="anchor-link" href="#%ED%95%98%EC%9D%B4%ED%8D%BC%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0"> </a>
+</h4>
+<p>하이퍼 파라미터 : 정지규칙 값 설정</p>
+<p><code>-</code> (1/4) 최대 깊이 (max_depth) : 뿌리 노드로부터 내려갈 수 있는 깊이 지정 (작을수록 트리는 작아짐)</p>
+<p><code>-</code> (2/4) 최소 노드크기 (min_samples_split) : 노드를 분할하기 위한 데이터 수, 해당 노드에 이 값보다 적은 확률변수가 있다면 stop. (작을수록 트리는 커짐)</p>
+<p><code>-</code> (3/4) 최소 향상도 (min_impurity_decrease) : 향상도가 설정값 이하라면 더이상 분할하지 않음. (작을수록 트리는 커짐)</p>
+<p><code>-</code> (4/4) 비용복잡도 (Cost-complexity) : 트리가 커지는 것에 대해 패널티 계수를 정하여 불순도와 트리가 커지는 것에 대해 복잡도를 계산</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">treeterms</span> <span class="o">=</span> <span class="s1">'https://gmlwjd9405.github.io/images/data-structure-tree/tree-terms.png'</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">htmlstr</span> <span class="o">=</span> <span class="s2">"&lt;img src= '</span><span class="si">{url}</span><span class="s2">'&gt;"</span>
+<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">htmlstr</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">treeterms</span><span class="p">)))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<img src="https://gmlwjd9405.github.io/images/data-structure-tree/tree-terms.png">
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>루트 노드(root node): 부모가 없는 노드, 트리는 하나의 루트 노드만을 가진다.</li>
+<li>단말 노드(leaf node): 자식이 없는 노드, ‘말단 노드’ 또는 ‘잎 노드’라고도 부른다.</li>
+<li>내부(internal) 노드: 단말 노드가 아닌 노드</li>
+<li>간선(edge): 노드를 연결하는 선 (link, branch 라고도 부름)</li>
+<li>형제(sibling): 같은 부모를 가지는 노드</li>
+<li>노드의 크기(size): 자신을 포함한 모든 자손 노드의 개수</li>
+<li>노드의 깊이(depth): 루트에서 어떤 노드에 도달하기 위해 거쳐야 하는 간선의 수</li>
+<li>노드의 레벨(level): 트리의 특정 깊이를 가지는 노드의 집합</li>
+<li>노드의 차수(degree): 하위 트리 개수 / 간선 수 (degree) = 각 노드가 지닌 가지의 수</li>
+<li>트리의 차수(degree of tree): 트리의 최대 차수</li>
+<li>트리의 높이(height): 루트 노드에서 가장 깊숙히 있는 노드의 깊이</li>
+</ul>
+<p>출처 : <a href="https://gmlwjd9405.github.io/2018/08/12/data-structure-tree.html">https://gmlwjd9405.github.io/2018/08/12/data-structure-tree.html</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="GridSearch">
+<a class="anchor" href="#GridSearch" aria-hidden="true"><span class="octicon octicon-link"></span></a>GridSearch<a class="anchor-link" href="#GridSearch"> </a>
+</h4>
+<p>from sklearn.model_selection import GridSearchCV</p>
+<p>model = RandomForestRegressor(criterion = 'mse', random_state=2020)</p>
+<p>params = {'n_estimators': [200, 300, 500],</p>
+
+<pre><code>      'max_features': [5, 6, 8],
+
+      'min_samples_leaf': [1, 3, 5]}
+
+
+</code></pre>
+<p>greedy_CV = GridSearchCV(model, param_grid=params, cv = 3, n_jobs = -1)</p>
+<p>greedy_CV.fit(X_train, Y_train)</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="wxnav/dacon"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/dacon/python/2022/07/25/RandomForest.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/dacon/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/dacon/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/dacon/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An easy to use blogging platform with support for Jupyter Notebooks.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/wxnav" target="_blank" title="wxnav"><svg class="svg-icon grey"><use xlink:href="/dacon/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.instagram.com/tatstix" target="_blank" title="tatstix"><svg class="svg-icon grey"><use xlink:href="/dacon/assets/minima-social-icons.svg#instagram"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
